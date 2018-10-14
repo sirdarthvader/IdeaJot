@@ -1,19 +1,30 @@
 const express = require('express');
-const app = express();
-const exphbs = require('express-handlebars');
-const PORT =  process.env.PORT || 5000;
+const exphbs  = require('express-handlebars');
 
-// Server middleware
-// app.use()
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+const app = express();
+
+// Handlebars Middleware
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 
+
+// Index Route
 app.get('/', (req, res) => {
-    res.render('home');
-})
+  const title = 'Welcome';
+  res.render('home', {
+    title: title
+  });
+});
+
+// About Route
 app.get('/about', (req, res) => {
-    res.send('about page');
-})
-app.listen(PORT, () => {
-    console.log(`server started on ${PORT}`);
-})
+  res.render('about');
+});
+
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =>{
+  console.log(`Server started on port ${PORT}`);
+});
