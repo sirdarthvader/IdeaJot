@@ -1,0 +1,22 @@
+{
+  "name": "ideajot",
+  "version": "1.0.0",
+  "description": "app to create video ideas",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashishcodes4/IdeaJot.git"
+  },
+  "author": "Ashish Nandan Singh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashishcodes4/IdeaJot/issues"
+  },
+  "homepage": "https://github.com/ashishcodes4/IdeaJot#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
