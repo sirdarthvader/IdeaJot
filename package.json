@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ashishcodes4/IdeaJot#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "mongoose": "^5.3.3",

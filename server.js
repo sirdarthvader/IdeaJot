@@ -1,8 +1,14 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
+//Instantiate express app
 const app = express();
+
+//Body Parser middleware setup
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 //connect to mongoose
 mongoose.Promise = global.Promise;
@@ -45,8 +51,25 @@ app.get('/about', (req, res) => {
   res.render('about');
 });
 
-app.get('/ideas', (req, res) => {
-  res.render('idea');
+
+//Process Form
+app.post('/ideas', (req, res) => {
+  let errors = [];
+  if(!req.body.title) {
+    errors.push({text: 'Please add a title'});
+  }
+  if(!req.body.description) {
+    errors.push({text: 'Please add some description'});
+  }
+  if(errors.length>0) {
+    res.render('ideas/add', {
+      errors: errors,
+      title: req.body.title,
+      description: req.body.description
+    });
+  } else {
+    res.send('passed');
+  }
 });
 
 //Add Idea Route
