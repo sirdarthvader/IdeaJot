@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ashishcodes4/IdeaJot#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
     "nodemon": "^1.18.4"
   }
 }
