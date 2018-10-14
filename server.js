@@ -45,6 +45,15 @@ app.get('/about', (req, res) => {
   res.render('about');
 });
 
+app.get('/ideas', (req, res) => {
+  res.render('idea');
+});
+
+//Add Idea Route
+app.get('/ideas/add', (req, res) => {
+  res.render('ideas/add');
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
