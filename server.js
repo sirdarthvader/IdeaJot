@@ -19,6 +19,9 @@ mongoose
     console.log('trouble connected mongoDB');
   });
 
+//Load Mongoose model
+// const 
+
 // Handlebars Middleware
 app.engine(
   'handlebars',
