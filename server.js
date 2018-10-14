@@ -20,7 +20,8 @@ mongoose
   });
 
 //Load Mongoose model
-// const 
+require('./models/Idea');
+const Idea = mongoose.model('idea');
 
 // Handlebars Middleware
 app.engine(
