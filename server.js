@@ -80,17 +80,28 @@ app.post('/ideas', (req, res) => {
 //Show ideas Route
 app.get('/ideas', (req, res) => {
   Idea.find({})
-  .sort({date: 'desc'})
-  .then(ideas => {
-    res.render('ideas/index', {
-      ideas: ideas,
-    })
-  })
-})
+    .sort({ date: 'desc' })
+    .then(ideas => {
+      res.render('ideas/index', {
+        ideas: ideas,
+      });
+    });
+});
 
 //Add Idea Route
 app.get('/ideas/add', (req, res) => {
   res.render('ideas/add');
+});
+
+//Edit Idea
+app.get('/ideas/edit/:id', (req, res) => {
+  Idea.findOne({
+    _id: req.params.id,
+  }).then(idea => {
+    res.render('ideas/edit', {
+      idea: idea,
+    });
+  });
 });
 
 const PORT = process.env.PORT || 5000;
