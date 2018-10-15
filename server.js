@@ -75,9 +75,14 @@ app.post('/ideas', (req, res) => {
       title: req.body.title,
       description: req.body.description,
     };
-    new Idea(newIdea).save().then(idea => {
-      res.redirect('/ideas');
-    });
+    new Idea(newIdea)
+      .save()
+      .then(idea => {
+        res.redirect('/ideas');
+      })
+      .catch(err => {
+        console.log({ msg: err });
+      });
   }
 });
 
@@ -89,6 +94,9 @@ app.get('/ideas', (req, res) => {
       res.render('ideas/index', {
         ideas: ideas,
       });
+    })
+    .catch(err => {
+      console.log({ msg: err });
     });
 });
 
@@ -101,24 +109,49 @@ app.get('/ideas/add', (req, res) => {
 app.get('/ideas/edit/:id', (req, res) => {
   Idea.findOne({
     _id: req.params.id,
-  }).then(idea => {
-    res.render('ideas/edit', {
-      idea: idea,
+  })
+    .then(idea => {
+      res.render('ideas/edit', {
+        idea: idea,
+      });
+    })
+    .catch(err => {
+      console.log({
+        msg: err,
+      });
     });
-  });
 });
 
 //Edit form process
 app.put('/ideas/:id', (req, res) => {
-  Idea.findOne({ id: req.body.id }).then(idea => {
-    //mutate with new values
-    idea.title = req.body.title;
-    idea.description = req.body.description;
+  Idea.findOne({ id: req.body.id })
+    .then(idea => {
+      //mutate with new values
+      idea.title = req.body.title;
+      idea.description = req.body.description;
 
-    idea.save().then(idea => {
-      res.redirect('/ideas');
+      idea
+        .save()
+        .then(idea => {
+          res.redirect('/ideas');
+        })
+        .catch(err => {
+          console.log({ msg: err });
+        });
+    })
+    .catch(err => {
+      console.log('can not find by id...');
     });
+});
+
+//Delete idea request
+app.delete('/ideas/:id', (req, res) => {
+  Idea.remove({
+    _id: req.params.id,
+  }).then(() => {
+    res.redirect('/ideas');
   });
+  // res.send('deleted');
 });
 
 const PORT = process.env.PORT || 5000;
