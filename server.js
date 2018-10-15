@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 //Body Parser middleware setup
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //connect to mongoose
@@ -15,14 +15,14 @@ mongoose.Promise = global.Promise;
 
 mongoose
   .connect(
-    'mongodb://localhost/ideajot-dev',
-    { useMongoClient: true }
+    'mongodb://ashish:db1234@ds133353.mlab.com:33353/ideajot',
+    { useNewUrlParser: true }
   )
   .then(() => {
     console.log('mongoDB connected');
   })
   .catch(err => {
-    console.log('trouble connected mongoDB');
+    console.log('trouble connecting mongoDB');
   });
 
 //Load Mongoose model
@@ -51,26 +51,42 @@ app.get('/about', (req, res) => {
   res.render('about');
 });
 
-
 //Process Form
 app.post('/ideas', (req, res) => {
   let errors = [];
-  if(!req.body.title) {
-    errors.push({text: 'Please add a title'});
+  if (!req.body.title) {
+    errors.push({ text: 'Please add a title' });
   }
-  if(!req.body.description) {
-    errors.push({text: 'Please add some description'});
+  if (!req.body.description) {
+    errors.push({ text: 'Please add some description' });
   }
-  if(errors.length>0) {
+  if (errors.length > 0) {
     res.render('ideas/add', {
       errors: errors,
       title: req.body.title,
-      description: req.body.description
+      description: req.body.description,
     });
   } else {
-    res.send('passed');
+    const newIdea = {
+      title: req.body.title,
+      description: req.body.description,
+    };
+    new Idea(newIdea).save().then(idea => {
+      res.redirect('/ideas');
+    });
   }
 });
+
+//Show ideas Route
+app.get('/ideas', (req, res) => {
+  Idea.find({})
+  .sort({date: 'desc'})
+  .then(ideas => {
+    res.render('ideas/index', {
+      ideas: ideas,
+    })
+  })
+})
 
 //Add Idea Route
 app.get('/ideas/add', (req, res) => {
