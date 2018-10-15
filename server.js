@@ -3,6 +3,8 @@ const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 //Instantiate express app
 const app = express();
@@ -42,6 +44,22 @@ app.set('view engine', 'handlebars');
 //Method overRide middleware
 app.use(methodOverride('_method'));
 
+// Express Session middleware
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}))
+app.use(flash());
+
+app.use(function(req, res, next){
+  res.local.success_msg = req.flash('success_msg');
+  res.local.error_msg = req.flash('error_msg');
+  res.local.error = req.flash('error');
+  next();
+})
+
 // Index Route
 app.get('/', (req, res) => {
   const title = 'Welcome';
@@ -78,6 +96,7 @@ app.post('/ideas', (req, res) => {
     new Idea(newIdea)
       .save()
       .then(idea => {
+        res.flash('success-msg', 'Idea added successfully');
         res.redirect('/ideas');
       })
       .catch(err => {
@@ -133,6 +152,7 @@ app.put('/ideas/:id', (req, res) => {
       idea
         .save()
         .then(idea => {
+          res.flash('success-msg', 'Idea edited successfully');
           res.redirect('/ideas');
         })
         .catch(err => {
@@ -149,6 +169,7 @@ app.delete('/ideas/:id', (req, res) => {
   Idea.remove({
     _id: req.params.id,
   }).then(() => {
+    res.flash('success-msg', 'Idea deleted successfully');
     res.redirect('/ideas');
   });
   // res.send('deleted');
