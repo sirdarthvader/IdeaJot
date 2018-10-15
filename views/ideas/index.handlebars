@@ -4,13 +4,13 @@
   <p>{{description}}</p>
   <a class="btn btn-dark btn-block mb-2" href="/ideas/edit/{{id}}">Edit</a>
   <form method="POST" action="/ideas/{{id}}?_method=DELETE">
-  <input type="hidden" name="_method" value="DELETE">
-  <input type="submit" class="btn btn-danger btn-block" value="DELETE">
-</form>
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" class="btn btn-danger btn-block" value="DELETE">
+  </form>
 </div>
 
 {{else}}
 
-  <p>No Idea data available....</p>
+<p>No Idea data available....</p>
 
 {{/each}}
