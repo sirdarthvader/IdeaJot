@@ -6,7 +6,8 @@
 {{idea.title}}
 <div class="card card-body">
   <h3>Edit down your ideas...</h3>
-  <form action="/ideas" method="post">
+  <form action="/ideas/{{idea.id}}?_method=PUT" method="post">
+  <input type="hidden" name="_method" value="PUT">
     <div class="form-group">
       <label for="title">Title</label>
       <input value="{{idea.title}}" type="text" class="form-control" name="title" required>
