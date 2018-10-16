@@ -27,12 +27,6 @@ router.post('/register', (req, res) => {
   if (req.body.password.length < 4) {
     errors.push({ text: 'Password must be bigger than 4 characters' });
   }
-  console.log(
-    req.body.name,
-    req.body.email,
-    req.body.password,
-    req.body.password2
-  );
   if (errors.length > 0) {
     res.render('users/register', {
       errors: errors,
@@ -42,33 +36,47 @@ router.post('/register', (req, res) => {
       password2: req.body.password2,
     });
   } else {
-    const newUser = {
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    };
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (hash, err) => {
-        if (err) throw err;
-        newUser.password = hash;
-        newUser
-          .save()
-          .then(user => {
-            req.flash('success_msg', 'You are now registered and can login');
-            res.redirect('users/login');
-          })
-          .catch(err => {
-            console.log(err);
+    User.findOne({ email: req.body.email })
+    .then(user => {
+      if (user) {
+        req.flash('error_msg', 'A user exists with the same email id');
+        res.redirect('/user/register');
+      } else {
+        const newUser = new User({
+          name: req.body.name,
+          email: req.body.email,
+          password: req.body.password,
+        });
+        bcrypt.genSalt(10, function(err, salt) {
+          bcrypt.hash(newUser.password, salt, function(err, hash) {
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => {
+                req.flash(
+                  'success_msg',
+                  'You have been registered, please signin'
+                );
+                res.redirect('/user/login');
+              })
+              .catch(err => {
+                console.log(err);
+                return;
+              });
           });
-      });
+        });
+      }
     });
   }
 });
 
 //Process Login form
-router.post('/user/login', (req, res) => {
-  let errors = [];
-  const { email, password } = req.body;
+router.post('/user/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/ideas',
+    failureRedirect: '/user/login',
+    failureFlas: true
+  })(req, res, next);
 });
 
 module.exports = router;
