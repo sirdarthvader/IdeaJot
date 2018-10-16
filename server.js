@@ -54,9 +54,9 @@ app.use(session({
 app.use(flash());
 
 app.use(function(req, res, next){
-  res.local.success_msg = req.flash('success_msg');
-  res.local.error_msg = req.flash('error_msg');
-  res.local.error = req.flash('error');
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
   next();
 })
 
@@ -96,7 +96,7 @@ app.post('/ideas', (req, res) => {
     new Idea(newIdea)
       .save()
       .then(idea => {
-        res.flash('success-msg', 'Idea added successfully');
+        req.flash('success_msg', 'Idea added successfully')
         res.redirect('/ideas');
       })
       .catch(err => {
@@ -152,7 +152,7 @@ app.put('/ideas/:id', (req, res) => {
       idea
         .save()
         .then(idea => {
-          res.flash('success-msg', 'Idea edited successfully');
+          req.flash('success_msg', 'Idea edited successfully')
           res.redirect('/ideas');
         })
         .catch(err => {
@@ -169,7 +169,7 @@ app.delete('/ideas/:id', (req, res) => {
   Idea.remove({
     _id: req.params.id,
   }).then(() => {
-    res.flash('success-msg', 'Idea deleted successfully');
+    req.flash('success_msg', 'Idea deleted successfully')
     res.redirect('/ideas');
   });
   // res.send('deleted');
