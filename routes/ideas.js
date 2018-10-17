@@ -80,19 +80,22 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
 router.put('/:id', ensureAuthenticated, (req, res) => {
   Idea.findOne({ id: req.body.id })
     .then(idea => {
-      //mutate with new values
-      idea.title = req.body.title;
-      idea.description = req.body.description;
-
+      if(idea.user !== req.user.id) {
+        req.flash('error_msg', 'You are not authorized');
+      } else {
+        idea.title = req.body.title;
+        idea.description = req.body.description;
+        
       idea
-        .save()
-        .then(idea => {
-          req.flash('success_msg', 'Idea edited successfully');
-          res.redirect('/ideas');
-        })
-        .catch(err => {
-          console.log({ msg: err });
-        });
+      .save()
+      .then(idea => {
+        req.flash('success_msg', 'Idea edited successfully');
+        res.redirect('/ideas');
+      })
+      .catch(err => {
+        console.log({ msg: err });
+      });      
+      }
     })
     .catch(err => {
       console.log('can not find by id...');
