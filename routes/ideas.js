@@ -1,12 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const {ensureAuthenticated}  = require('./helpers/auth');
-
+const { ensureAuthenticated } = require('../helpers/auth');
 
 //Load Mongoose model
 require('../models/Idea');
 const Idea = mongoose.model('idea');
+
+//Show ideas Route
+router.get('/', ensureAuthenticated, (req, res) => {
+  Idea.find({})
+    .sort({ date: 'desc' })
+    .then(ideas => {
+      res.render('ideas/index', {
+        ideas: ideas,
+      });
+    })
+    .catch(err => {
+      console.log({ msg: err });
+    });
+});
+
+//Add Idea Route
+router.get('/add', ensureAuthenticated, (req, res) => {
+  res.render('ideas/add');
+});
 
 //Process Form
 router.post('/', ensureAuthenticated, (req, res) => {
@@ -31,32 +49,13 @@ router.post('/', ensureAuthenticated, (req, res) => {
     new Idea(newIdea)
       .save()
       .then(idea => {
-        req.flash('success_msg', 'Idea added successfully')
+        req.flash('success_msg', 'Idea added successfully');
         res.redirect('/ideas');
       })
       .catch(err => {
         console.log({ msg: err });
       });
   }
-});
-
-//Show ideas Route
-router.get('/', ensureAuthenticated, (req, res) => {
-  Idea.find({})
-    .sort({ date: 'desc' })
-    .then(ideas => {
-      res.render('ideas/index', {
-        ideas: ideas,
-      });
-    })
-    .catch(err => {
-      console.log({ msg: err });
-    });
-});
-
-//Add Idea Route
-router.get('/add', ensureAuthenticated, (req, res) => {
-  res.render('ideas/add');
 });
 
 //Edit Idea
@@ -87,7 +86,7 @@ router.put('/:id', ensureAuthenticated, (req, res) => {
       idea
         .save()
         .then(idea => {
-          req.flash('success_msg', 'Idea edited successfully')
+          req.flash('success_msg', 'Idea edited successfully');
           res.redirect('/ideas');
         })
         .catch(err => {
@@ -100,11 +99,11 @@ router.put('/:id', ensureAuthenticated, (req, res) => {
 });
 
 //Delete idea request
-router.delete('/:id', ensureAuthenticated,  (req, res) => {
+router.delete('/:id', ensureAuthenticated, (req, res) => {
   Idea.remove({
     _id: req.params.id,
   }).then(() => {
-    req.flash('success_msg', 'Idea deleted successfully')
+    req.flash('success_msg', 'Idea deleted successfully');
     res.redirect('/ideas');
   });
   // res.send('deleted');
