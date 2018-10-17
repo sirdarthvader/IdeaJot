@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
 
 //Instantiate express app
 const app = express();
@@ -16,6 +17,9 @@ app.use(bodyParser.json());
 //Import routes
 const ideas = require('./routes/ideas');
 const user = require('./routes/user');
+
+//Load config 
+require('./config/passport')(passport);
 
 //connect to mongoose
 mongoose.Promise = global.Promise;

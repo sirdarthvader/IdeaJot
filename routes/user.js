@@ -36,8 +36,7 @@ router.post('/register', (req, res) => {
       password2: req.body.password2,
     });
   } else {
-    User.findOne({ email: req.body.email })
-    .then(user => {
+    User.findOne({ email: req.body.email }).then(user => {
       if (user) {
         req.flash('error_msg', 'A user exists with the same email id');
         res.redirect('/user/register');
@@ -71,11 +70,11 @@ router.post('/register', (req, res) => {
 });
 
 //Process Login form
-router.post('/user/login', (req, res, next) => {
+router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: '/ideas',
     failureRedirect: '/user/login',
-    failureFlas: true
+    failureFlas: true,
   })(req, res, next);
 });
 
