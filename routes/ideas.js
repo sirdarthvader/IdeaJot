@@ -9,7 +9,7 @@ const Idea = mongoose.model('idea');
 
 //Show ideas Route
 router.get('/', ensureAuthenticated, (req, res) => {
-  Idea.find({})
+  Idea.find({user: req.user.id})
     .sort({ date: 'desc' })
     .then(ideas => {
       res.render('ideas/index', {
@@ -45,6 +45,7 @@ router.post('/', ensureAuthenticated, (req, res) => {
     const newIdea = {
       title: req.body.title,
       description: req.body.description,
+      user: req.user.id
     };
     new Idea(newIdea)
       .save()
