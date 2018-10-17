@@ -18,8 +18,12 @@ app.use(bodyParser.json());
 const ideas = require('./routes/ideas');
 const user = require('./routes/user');
 
-//Load config 
+//Load config
 require('./config/passport')(passport);
+passport.authenticate('local', { successFlash: 'Welcome!' });
+passport.authenticate('local', {
+  failureFlash: 'Invalid username or password.',
+});
 
 //connect to mongoose
 mongoose.Promise = global.Promise;
@@ -44,10 +48,8 @@ app.engine(
   })
 );
 app.set('view engine', 'handlebars');
-
 //Method overRide middleware
 app.use(methodOverride('_method'));
-
 // Express Session middleware
 app.use(
   session({
@@ -56,13 +58,21 @@ app.use(
     saveUninitialized: true,
   })
 );
+//Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Flash message middleware
 app.use(flash());
 app.use(function(req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
   next();
 });
+
+// *****************************Routes***********************************
 
 // Index Route
 app.get('/', (req, res) => {
@@ -71,15 +81,15 @@ app.get('/', (req, res) => {
     title: title,
   });
 });
-
 // About Route
 app.get('/about', (req, res) => {
   res.render('about');
 });
 
 //Use routes
-app.use('/ideas', ideas)
-app.use('/user', user)
+app.use('/ideas', ideas);
+app.use('/user', user);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
