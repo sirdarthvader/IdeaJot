@@ -1,5 +1,11 @@
 <div class="container">
     <div class="jumbotron">
         <h1>Idea Jot</h1>
+        <p></p>
+        <div>
+            {{#if user}}
+        <a href="/ideas/add" class="btn btn-primary">Add Idea</a>
+        {{else}} {{/if}}
+    </div>
     </div>
 </div>
