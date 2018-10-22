@@ -48,8 +48,11 @@ app.engine(
   })
 );
 app.set('view engine', 'handlebars');
+
 //Method overRide middleware
 app.use(methodOverride('_method'));
+
+
 // Express Session middleware
 app.use(
   session({
@@ -58,6 +61,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+
 //Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
