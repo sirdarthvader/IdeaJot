@@ -9,7 +9,7 @@ const Idea = mongoose.model('idea');
 
 //Show ideas Route
 router.get('/', ensureAuthenticated, (req, res) => {
-  Idea.find({user: req.user.id})
+  Idea.find({ user: req.user.id })
     .sort({ date: 'desc' })
     .then(ideas => {
       res.render('ideas/index', {
@@ -45,7 +45,7 @@ router.post('/', ensureAuthenticated, (req, res) => {
     const newIdea = {
       title: req.body.title,
       description: req.body.description,
-      user: req.user.id
+      user: req.user.id,
     };
     new Idea(newIdea)
       .save()
@@ -65,7 +65,7 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
     _id: req.params.id,
   })
     .then(idea => {
-      if(idea.user != req.user.id) {
+      if (idea.user != req.user.id) {
         req.flash('error_msg', 'You are not authorized');
         res.redirect('/ideas');
       } else {
